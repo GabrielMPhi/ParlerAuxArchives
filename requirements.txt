@@ -1,3 +1,6 @@
 llama-index-embeddings-huggingface
 llama-index-llms-ollama
+llama-index-llms-groq
+llama-index-readers-files
+llama-index-embeddings-openai
 streamlit
