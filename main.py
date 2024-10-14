@@ -17,12 +17,12 @@ from llama_index.llms.groq import Groq
 DATA_DIR = "./data"
 INDEX_DIR = "./storage"
 LLM_MODEL_NAME = "llama-3.1-70b-versatile"
-embedding_name = "mixedbread-ai/mxbai-embed-large-v1"
-embed_model = HuggingFaceEmbedding(model_name=embedding_name)
+EMBEDDING_NAME = "mixedbread-ai/mxbai-embed-large-v1"
+EMBED_MODEL = HuggingFaceEmbedding(model_name=EMBEDDING_NAME)
 
 llm = Groq(model=LLM_MODEL_NAME, temperature=0.2, request_timeout=220.0)
 Settings.llm = llm
-Settings.embed_model = embed_model
+Settings.embed_model = EMBED_MODEL
 
 
 @st.cache_data
@@ -59,15 +59,14 @@ def prepare_template():
 
 st.markdown(
     """
-            <img src='https://upload.wikimedia.org/wikipedia/en/a/ae/The_library_of_babel_-_bookcover.jpg' style='display: block; margin-left: auto; margin-right: auto; width: 160px;'>
-
             <div style='text-align: center;'>
-            <h1>Titre principal</h1>
-            <h5>Titre de niveau 5</h5>
+            <h1>Data ChatBot</h1>
+            <h5>Ask anything to your own data</h5>
             </div>
             """,
     unsafe_allow_html=True,
 )
+# <img src='/ressources/logo.jpg' style='display: block; margin-left: auto; margin-right: auto; width: 160px;'>
 
 # Initialize session state messages if not already present
 if "messages" not in st.session_state:
