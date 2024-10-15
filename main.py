@@ -96,6 +96,18 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": ui_messages["greeting"]}
     ]
 
+
+def get_conversation_history():
+    """
+    Prepare the conversation history to provide context to the model.
+    """
+    history = ""
+    for message in st.session_state.messages:
+        role = "User" if message["role"] == "user" else "Assistant"
+        history += f"{role}: {message['content']}\n"
+    return history
+
+
 # Capture user input and append it to session state messages
 if prompt := st.chat_input(ui_messages["user_input_placeholder"]):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -108,10 +120,15 @@ for message in st.session_state.messages:
 qa_template = prepare_template(TEMPLATE_FILE)
 query_engine = index.as_query_engine(text_qa_template=qa_template, similarity_top_k=2)
 
+# Add conversation history to context
+conversation_history = get_conversation_history()
+full_prompt = f"{conversation_history}User: {prompt}"
+
+
 if st.session_state.messages[-1]["role"] == "user":
     with st.chat_message("assistant"):
         with st.spinner(ui_messages["wait_spinner"]):
-            response = query_engine.query(prompt)
+            response = query_engine.query(full_prompt)
         st.markdown(response.response, unsafe_allow_html=True)
         st.session_state.messages.append(
             {"role": "assistant", "content": response.response}
