@@ -1,3 +1,4 @@
+import json
 import os
 
 import streamlit as st
@@ -12,13 +13,13 @@ from llama_index.core import (
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.groq import Groq
 
-# from llama_index.llms.ollama import Ollama
-
 DATA_DIR = "./data"
 INDEX_DIR = "./storage"
 LLM_MODEL_NAME = "llama-3.1-70b-versatile"
 EMBEDDING_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 EMBED_MODEL = HuggingFaceEmbedding(model_name=EMBEDDING_NAME)
+TEMPLATE_FILE = "./template.txt"
+MESSAGES_FILE = "./messages.json"
 
 llm = Groq(model=LLM_MODEL_NAME, temperature=0.2, request_timeout=220.0)
 Settings.llm = llm
@@ -27,7 +28,6 @@ Settings.embed_model = EMBED_MODEL
 
 @st.cache_data
 def load_index():
-
     if not os.path.exists(INDEX_DIR):
         documents = SimpleDirectoryReader(DATA_DIR).load_data()
         index = VectorStoreIndex.from_documents(documents)
@@ -41,21 +41,27 @@ def load_index():
 index = load_index()
 
 
-def prepare_template():
+def prepare_template(template_file):
     """
-    Prepare a prompt template for the QA system.
+    Load the prompt template
     """
-    text_qa_template_str = """
-    You are a helpfull assistant, specialized in retrieving and synthetizing knowledge. You answer to user questions the best you can. Here is one : {query_str}
-    Here is your knowledge base :
-    --------
-    {context_str}
-    --------
-    Based on that knowledge base only, you write helpfull, precise and detailled answers
-    """
+    with open(template_file, "r") as f:
+        text_qa_template_str = f.read()
     qa_template = PromptTemplate(text_qa_template_str)
     return qa_template
 
+
+def load_messages(messages_file):
+    """
+    Load UI messages
+    """
+    with open(messages_file, "r") as f:
+        messages = json.load(f)
+    return messages
+
+
+# Load the messages from the external JSON config file
+ui_messages = load_messages(MESSAGES_FILE)
 
 st.markdown(
     """
@@ -66,14 +72,15 @@ st.markdown(
             """,
     unsafe_allow_html=True,
 )
-# <img src='/ressources/logo.jpg' style='display: block; margin-left: auto; margin-right: auto; width: 160px;'>
 
 # Initialize session state messages if not already present
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": "Oui ?"}]
+    st.session_state.messages = [
+        {"role": "assistant", "content": ui_messages["greeting"]}
+    ]
 
 # Capture user input and append it to session state messages
-if prompt := st.chat_input("Que veux-tu savoir, humain ?"):
+if prompt := st.chat_input(ui_messages["user_input_placeholder"]):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
 # Display chat messages
@@ -81,12 +88,12 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-qa_template = prepare_template()
+qa_template = prepare_template(TEMPLATE_FILE)
 query_engine = index.as_query_engine(text_qa_template=qa_template, similarity_top_k=2)
 
 if st.session_state.messages[-1]["role"] == "user":
     with st.chat_message("assistant"):
-        with st.spinner("wait spinner..."):
+        with st.spinner(ui_messages["wait_spinner"]):
             response = query_engine.query(prompt)
         st.markdown(response.response, unsafe_allow_html=True)
         st.session_state.messages.append(
