@@ -1,0 +1,4 @@
+{
+    "logo_path": "./logo.png",
+    "html_template": "<div style='text-align: center;'><img src='{logo}' alt='logo' style='width: 100px;'><h1>Data ChatBot</h1><h5>Ask anything to your own data</h5></div>"
+}

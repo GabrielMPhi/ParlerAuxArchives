@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 
@@ -20,6 +21,7 @@ EMBEDDING_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 EMBED_MODEL = HuggingFaceEmbedding(model_name=EMBEDDING_NAME)
 TEMPLATE_FILE = "./template.txt"
 MESSAGES_FILE = "./messages.json"
+UI_CONFIG_FILE = "./ui.json"
 
 llm = Groq(model=LLM_MODEL_NAME, temperature=0.2, request_timeout=220.0)
 Settings.llm = llm
@@ -60,16 +62,31 @@ def load_messages(messages_file):
     return messages
 
 
-# Load the messages from the external JSON config file
+def load_ui_config(ui_config_file):
+    """
+    Load the UI configuration from an external JSON file.
+    """
+    with open(ui_config_file, "r") as f:
+        ui_config = json.load(f)
+    return ui_config
+
+
+def load_logo_as_base64(logo_path):
+    """
+    Load an image and convert it to a base64 string.
+    """
+    with open(logo_path, "rb") as image_file:
+        base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+    return f"data:image/png;base64,{base64_image}"
+
+
+# Load UI conf, logo & messages
+ui_config = load_ui_config(UI_CONFIG_FILE)
 ui_messages = load_messages(MESSAGES_FILE)
+logo_base64 = load_logo_as_base64(ui_config["logo_path"])
 
 st.markdown(
-    """
-            <div style='text-align: center;'>
-            <h1>Data ChatBot</h1>
-            <h5>Ask anything to your own data</h5>
-            </div>
-            """,
+    ui_config["html_template"].format(logo=logo_base64),
     unsafe_allow_html=True,
 )
 
