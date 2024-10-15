@@ -14,10 +14,12 @@ from llama_index.core import (
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.groq import Groq
 
+# from llama_index.llms.openai import OpenAI
+
 DATA_DIR = "./data"
 INDEX_DIR = "./storage"
+# LLM_MODEL_NAME = "gpt-4o"
 LLM_MODEL_NAME = "llama-3.2-90b-text-preview"
-# LLM_MODEL_NAME = "llama-3.1-70b-versatile"
 EMBEDDING_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 EMBED_MODEL = HuggingFaceEmbedding(model_name=EMBEDDING_NAME)
 TEMPLATE_FILE = "./template.txt"
@@ -25,6 +27,7 @@ MESSAGES_FILE = "./messages.json"
 UI_CONFIG_FILE = "./ui.json"
 
 llm = Groq(model=LLM_MODEL_NAME, temperature=0.2, request_timeout=220.0)
+# llm = OpenAI(model=LLM_MODEL_NAME)
 Settings.llm = llm
 Settings.embed_model = EMBED_MODEL
 
