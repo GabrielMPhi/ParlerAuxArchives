@@ -10,6 +10,7 @@
 ```bash
 git clone https://github.com/isingasimplesong/local-knowledge-assistant.git
 cd local-knowledge-assistant
+# put your data in data/
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
