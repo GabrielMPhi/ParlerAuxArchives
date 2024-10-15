@@ -3,4 +3,4 @@ Here is your knowledge base:
 --------
 {context_str}
 --------
-Based on that knowledge base only, you write helpful, precise, and detailed answers.
+Based on that knowledge base, you write helpful, precise, and detailed answers.
