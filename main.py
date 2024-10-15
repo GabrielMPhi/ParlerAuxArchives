@@ -16,7 +16,8 @@ from llama_index.llms.groq import Groq
 
 DATA_DIR = "./data"
 INDEX_DIR = "./storage"
-LLM_MODEL_NAME = "llama-3.1-70b-versatile"
+LLM_MODEL_NAME = "llama-3.2-90b-text-preview"
+# LLM_MODEL_NAME = "llama-3.1-70b-versatile"
 EMBEDDING_NAME = "mixedbread-ai/mxbai-embed-large-v1"
 EMBED_MODEL = HuggingFaceEmbedding(model_name=EMBEDDING_NAME)
 TEMPLATE_FILE = "./template.txt"
