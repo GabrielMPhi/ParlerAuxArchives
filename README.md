@@ -1,5 +1,7 @@
 # Local Knowledge assistant
 
+![lka screenshot](lka.png)
+
 ## Features
 
 - Provides an easy way to deploy a chatbot for chatting with your own data
