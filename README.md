@@ -1,6 +1,9 @@
 # Local Knowledge assistant
 
-![lka screenshot](lka.png)
+<!--![lka screenshot](lka.png)-->
+<p align="center">
+  <img src="lka.png" alt="lka screenshot"/>
+</p>
 
 ## Features
 
