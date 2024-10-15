@@ -1,5 +1,4 @@
-# llama-index-embeddings-huggingface
-# llama-index-llms-groq
-# llama-index-readers-files
-llama-index
+llama-index-embeddings-huggingface
+llama-index-llms-groq
+llama-index-readers-files
 streamlit
