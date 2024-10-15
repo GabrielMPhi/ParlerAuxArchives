@@ -34,3 +34,4 @@ streamlit run main.py
 ## Roadmap
 
 - Provide a simpler way to change llm & embedding models
+- Provide a simple way to update index
